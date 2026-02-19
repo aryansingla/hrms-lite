@@ -50,15 +50,26 @@ Open **http://127.0.0.1:8000/**. Dashboard is at `/`, employees at `/employees/`
 The app runs migrations and `collectstatic` on each deploy, then starts Gunicorn. Static files are served via WhiteNoise.
 
 ---
+# Dashboard Page
 <img width="1910" height="982" alt="Screenshot From 2026-02-19 22-28-18" src="https://github.com/user-attachments/assets/957cf395-7868-49ea-ac7f-8348fab68ae9" />
 
+# Employees Page
 <img width="1910" height="982" alt="Screenshot From 2026![Uploading Screenshot From 2026-02-19 22-28-37.png…]()
 -02-19 22-28-25" src="https://github.com/user-attachments/assets/4556ffff-d57b-4c57-9a6d-3c0c64142d87" />
 
+# Add Employee
 <img width="1910" height="982" alt="Screenshot From 2026-02-19 22-28-37" src="https://github.com/user-attachments/assets/f175e1cc-d4dc-4ade-bbe0-dc016e665f4f" />
 
+# Employee Profile
+<img width="1910" height="982" alt="Screenshot From 2026-02-19 22-41-33" src="https://github.com/user-attachments/assets/9ca56895-a2ed-4ffb-8eb1-6f45127e5231" />
+
+# Edit Employee Profile
+<img width="1910" height="982" alt="Screenshot From 2026-02-19 22-41-43" src="https://github.com/user-attachments/assets/83ae2083-e7fd-4c9b-b618-e124dc42fd9f" />
+
+# Attendance Page
 <img width="1910" height="982" alt="Screenshot From 2026-02-19 22-28-47" src="https://github.com/user-attachments/assets/d58f2f35-f4c4-49af-b54c-840b3c38bbc6" />
 
+# Mark Attendance
 <img width="1910" height="982" alt="Screenshot From 2026-02-19 22-29-03" src="https://github.com/user-attachments/assets/392f9b38-053b-474d-b9bb-ed7a407ff9f3" />
 
 
