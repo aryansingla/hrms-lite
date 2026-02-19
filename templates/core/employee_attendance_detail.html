@@ -4,8 +4,9 @@
 
 {% block content %}
 <div class="card">
-    <div class="card-header">
+    <div class="card-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
         <h2>{{ employee.full_name }}</h2>
+        <a href="{% url 'employee_update' employee.pk %}" class="btn btn-secondary">Edit details</a>
     </div>
     <p>
         <strong>Employee ID:</strong> {{ employee.employee_id }}<br>

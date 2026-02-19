@@ -113,6 +113,33 @@ def employee_create(request: HttpRequest):
     return redirect("employee_list")
 
 
+@require_GET
+def employee_detail(request: HttpRequest, pk: int):
+    """Redirect to the attendance detail page for this employee (same content)."""
+    return redirect("employee_attendance_detail", pk=pk)
+
+
+@require_http_methods(["GET", "POST"])
+def employee_update(request: HttpRequest, pk: int):
+    employee = get_object_or_404(Employee, pk=pk)
+    if request.method == "POST":
+        form = EmployeeForm(request.POST, instance=employee)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, "Employee details updated.")
+                return redirect("employee_attendance_detail", pk=pk)
+            except Exception as exc:
+                form.add_error(None, str(exc))
+    else:
+        form = EmployeeForm(instance=employee)
+    return render(
+        request,
+        "core/employee_edit.html",
+        {"form": form, "employee": employee},
+    )
+
+
 @require_http_methods(["POST"])
 def employee_delete(request: HttpRequest, pk: int):
     employee = get_object_or_404(Employee, pk=pk)
