@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Employees · HRMS Lite{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="no-wrap">Employees</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <button type="button" class="filter-toggle" id="employee-filter-toggle" title="Filters">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 4h14v1.5L11.5 11v4L8.5 17v-6L3 5.5z"/>
+                </svg>
+            </button>
+            <button type="button" class="btn btn-primary" data-modal-open>
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M10 2.5a7.5 7.5 0 1 0 7.5 7.5A7.51 7.51 0 0 0 10 2.5Zm.75 3.75v3h3v1.5h-3v3h-1.5v-3h-3V9.25h3v-3Z"/>
+                </svg>
+                <span>Add employee</span>
+            </button>
+        </div>
+    </div>
+    <div class="filters-row">
+        <form method="get" class="filters-form">
+            <div class="float-label-wrap">
+                <input id="filter-name" type="text" name="name" value="{{ filter_name|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-name">Name</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-email" type="text" name="email" value="{{ filter_email|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-email">Email</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-department" type="text" name="department" value="{{ filter_department|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-department">Department</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{% url 'employee_list' %}" class="btn btn-secondary">Clear filters</a>
+        </form>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+            <tr>
+                <th class="no-wrap">Employee ID</th>
+                <th class="no-wrap">Name</th>
+                <th class="no-wrap">Email</th>
+                <th class="no-wrap">Department</th>
+                <th class="no-wrap">Total present days</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if employees %}
+                {% for e in employees %}
+                    <tr>
+                        <td class="no-wrap">{{ e.employee_id }}</td>
+                        <td class="no-wrap">
+                            <a href="{% url 'employee_attendance_detail' e.pk %}">
+                                {{ e.full_name }}
+                            </a>
+                        </td>
+                        <td class="no-wrap">{{ e.email }}</td>
+                        <td class="no-wrap">{{ e.department|default:"—" }}</td>
+                        <td class="no-wrap">{{ e.present_days|default:"0" }}</td>
+                        <td>
+                            <form method="post" action="{% url 'employee_delete' e.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this employee?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-state-title">
+                                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" style="margin-right:4px;">
+                                    <path d="M10 2.5a3 3 0 1 1-3 3 3 3 0 0 1 3-3Zm0 7c-3 0-5.5 1-5.5 3v2h11v-2c0-2-2.5-3-5.5-3Z"/>
+                                </svg>
+                                No employees yet
+                            </div>
+                            <div class="empty-state-text">
+                                Add an employee using the button above.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-wrap">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="no-wrap">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+<div class="modal-backdrop" id="employee-filters-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Filters</h2>
+            <button type="button" class="modal-close" data-close-employee-filters aria-label="Close">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <form method="get" class="filters-form">
+            <div class="float-label-wrap">
+                <input id="filter-name-modal" type="text" name="name" value="{{ filter_name|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-name-modal">Name</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-email-modal" type="text" name="email" value="{{ filter_email|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-email-modal">Email</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-department-modal" type="text" name="department" value="{{ filter_department|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-department-modal">Department</label>
+            </div>
+            <div class="form-actions" style="display:flex;gap:8px;">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{% url 'employee_list' %}" class="btn btn-secondary">Clear filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block modal_content %}
+<form method="post" action="{% url 'employee_create' %}">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color:#b91c1c;font-size:0.8rem;">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if form.non_field_errors %}
+        <p style="color:#b91c1c;font-size:0.85rem;margin-top:8px;">
+            {{ form.non_field_errors|striptags }}
+        </p>
+    {% endif %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+<script>
+(function() {
+    var toggle = document.getElementById('employee-filter-toggle');
+    var backdrop = document.getElementById('employee-filters-backdrop');
+    var closeBtn = backdrop && backdrop.querySelector('[data-close-employee-filters]');
+
+    function openFilters() {
+        if (backdrop) backdrop.classList.add('open');
+    }
+
+    function closeFilters() {
+        if (backdrop) backdrop.classList.remove('open');
+    }
+
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            openFilters();
+        });
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeFilters();
+        });
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', function(e) {
+            if (e.target === backdrop) {
+                closeFilters();
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}

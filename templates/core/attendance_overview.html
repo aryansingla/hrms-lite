@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance · HRMS Lite{% endblock %}
+
+{% block content %}
+<div class="card" id="attendance-card" data-selected-date="{{ selected_date }}">
+    <div class="card-header">
+        <h2 class="no-wrap">Attendance</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <button type="button" class="filter-toggle" id="attendance-filter-toggle" title="Filters">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 4h14v1.5L11.5 11v4L8.5 17v-6L3 5.5z"/>
+                </svg>
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-mark-attendance" data-default-date="{{ selected_date }}">
+                Mark attendance
+            </button>
+        </div>
+    </div>
+    <div class="filters-row">
+        <form method="get" class="filters-form" id="attendance-filters-form">
+            <div class="float-label-wrap">
+                <input id="filter-name" type="text" name="name" value="{{ filter_name|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-name">Name</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-department" type="text" name="department" value="{{ filter_department|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-department">Department</label>
+            </div>
+            <div class="float-label-wrap floated">
+                <select id="filter-status" name="status_filter">
+                    <option value="">All</option>
+                    <option value="present" {% if filter_status == 'present' %}selected{% endif %}>Present</option>
+                    <option value="absent" {% if filter_status == 'absent' %}selected{% endif %}>Absent</option>
+                    <option value="not_marked" {% if filter_status == 'not_marked' %}selected{% endif %}>Not marked</option>
+                </select>
+                <label for="filter-status">Status</label>
+            </div>
+            <div class="float-label-wrap floated">
+                <input id="filter-date" type="date" name="date" value="{{ selected_date }}">
+                <label for="filter-date">Date</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{% url 'attendance_overview' %}" class="btn btn-secondary">Clear filters</a>
+        </form>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+            <tr>
+                <th style="width:32px;">
+                    <input type="checkbox" id="att-select-all" title="Select all on page">
+                </th>
+                <th class="no-wrap">Employee</th>
+                <th class="no-wrap">Department</th>
+                <th class="no-wrap">Status for {{ selected_date }}</th>
+                <th class="no-wrap">Total present days</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for e in employees %}
+                <tr>
+                    <td>
+                        <input type="checkbox" value="{{ e.id }}" class="att-row-checkbox">
+                    </td>
+                    <td class="no-wrap">
+                        <a href="{% url 'employee_attendance_detail' e.pk %}">
+                            {{ e.full_name }}
+                        </a>
+                    </td>
+                    <td class="no-wrap">{{ e.department|default:"—" }}</td>
+                    <td class="no-wrap">
+                        {% if e.current_status %}
+                            <span class="pill {% if e.current_status == 'present' %}present{% else %}absent{% endif %}">
+                                {{ e.current_status_label }}
+                            </span>
+                        {% else %}
+                            <span class="pill">Not marked</span>
+                        {% endif %}
+                    </td>
+                    <td class="no-wrap">{{ e.present_days|default:"0" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No employees yet.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-wrap">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?{{ query_params }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="no-wrap">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?{{ query_params }}&page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="modal-backdrop" id="mark-attendance-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Mark attendance</h2>
+            <button type="button" class="modal-close" data-close-mark-attendance aria-label="Close">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <form method="post" action="{% url 'attendance_overview' %}" id="mark-attendance-form">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div>
+                    <label for="mark-date-input">Date</label>
+                    <input type="date" id="mark-date-input" name="date" value="{{ selected_date }}">
+                </div>
+                <div>
+                    <label for="mark-status">Status</label>
+                    <select id="mark-status" name="status">
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                    </select>
+                </div>
+            </div>
+            <div id="mark-employee-ids"></div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="attendance-filters-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Filters</h2>
+            <button type="button" class="modal-close" data-close-attendance-filters aria-label="Close">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <form method="get" class="filters-form" id="attendance-filters-modal-form">
+            <div class="float-label-wrap">
+                <input id="filter-name-modal" type="text" name="name" value="{{ filter_name|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-name-modal">Name</label>
+            </div>
+            <div class="float-label-wrap">
+                <input id="filter-department-modal" type="text" name="department" value="{{ filter_department|default:'' }}" placeholder=" " autocomplete="off">
+                <label for="filter-department-modal">Department</label>
+            </div>
+            <div class="float-label-wrap floated">
+                <select id="filter-status-modal" name="status_filter">
+                    <option value="">All</option>
+                    <option value="present" {% if filter_status == 'present' %}selected{% endif %}>Present</option>
+                    <option value="absent" {% if filter_status == 'absent' %}selected{% endif %}>Absent</option>
+                    <option value="not_marked" {% if filter_status == 'not_marked' %}selected{% endif %}>Not marked</option>
+                </select>
+                <label for="filter-status-modal">Status</label>
+            </div>
+            <div class="float-label-wrap floated">
+                <input id="filter-date-modal" type="date" name="date" value="{{ selected_date }}">
+                <label for="filter-date-modal">Date</label>
+            </div>
+            <div class="form-actions" style="display:flex;gap:8px;">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{% url 'attendance_overview' %}" class="btn btn-secondary">Clear filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function() {
+    var btn = document.getElementById('btn-mark-attendance');
+    var backdrop = document.getElementById('mark-attendance-backdrop');
+    var closeBtn = backdrop && backdrop.querySelector('[data-close-mark-attendance]');
+    var card = document.getElementById('attendance-card');
+    var markDateInput = document.getElementById('mark-date-input');
+    var container = document.getElementById('mark-employee-ids');
+
+    function openMarkModal() {
+        var checked = document.querySelectorAll('.att-row-checkbox:checked');
+        if (!checked.length) {
+            alert('Select at least one employee.');
+            return;
+        }
+        container.innerHTML = '';
+        checked.forEach(function(cb) {
+            var inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = 'employee_ids';
+            inp.value = cb.value;
+            container.appendChild(inp);
+        });
+        var defaultDate = (card && card.getAttribute('data-selected-date')) || (btn && btn.getAttribute('data-default-date')) || '';
+        if (markDateInput) markDateInput.value = defaultDate;
+        if (backdrop) backdrop.classList.add('open');
+    }
+
+    function closeMarkModal() {
+        if (backdrop) backdrop.classList.remove('open');
+    }
+
+    if (btn) btn.addEventListener('click', openMarkModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeMarkModal);
+    if (backdrop) backdrop.addEventListener('click', function(e) { if (e.target === backdrop) closeMarkModal(); });
+
+    var selectAll = document.getElementById('att-select-all');
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            document.querySelectorAll('.att-row-checkbox').forEach(function(cb) { cb.checked = selectAll.checked; });
+        });
+    }
+
+    var filterToggle = document.getElementById('attendance-filter-toggle');
+    var filtersBackdrop = document.getElementById('attendance-filters-backdrop');
+    var closeFiltersBtn = filtersBackdrop && filtersBackdrop.querySelector('[data-close-attendance-filters]');
+
+    function openFilters() {
+        if (filtersBackdrop) filtersBackdrop.classList.add('open');
+    }
+
+    function closeFilters() {
+        if (filtersBackdrop) filtersBackdrop.classList.remove('open');
+    }
+
+    if (filterToggle) {
+        filterToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            openFilters();
+        });
+    }
+    if (closeFiltersBtn) {
+        closeFiltersBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeFilters();
+        });
+    }
+    if (filtersBackdrop) {
+        filtersBackdrop.addEventListener('click', function(e) {
+            if (e.target === filtersBackdrop) closeFilters();
+        });
+    }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · HRMS Lite{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Overview</h2>
+    </div>
+    <div class="metric-row">
+        <div class="metric-card metric-employees">
+            <span class="metric-label">Total employees</span>
+            <span class="metric-value">{{ total_employees }}</span>
+        </div>
+        <div class="metric-card metric-attendance">
+            <span class="metric-label">Attendance marked today</span>
+            <span class="metric-value">{{ total_attendance_today }}</span>
+        </div>
+        <div class="metric-card metric-present">
+            <span class="metric-label">Present today</span>
+            <span class="metric-value">{{ present_today }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="no-wrap">Most regular (by Present days)</h2>
+    </div>
+    {% if top_present %}
+        <table>
+            <thead>
+            <tr>
+                <th class="no-wrap">Employee</th>
+                <th class="no-wrap">Department</th>
+                <th class="no-wrap">Total present days</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for e in top_present %}
+                <tr>
+                    <td class="no-wrap">
+                        <a href="{% url 'employee_attendance_detail' e.pk %}">
+                            {{ e.full_name }}
+                        </a>
+                    </td>
+                    <td class="no-wrap">{{ e.department|default:"—" }}</td>
+                    <td class="no-wrap">{{ e.present_days }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No attendance data yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

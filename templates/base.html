@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}HRMS Lite{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<header class="top-bar">
+    <div class="container top-bar-inner">
+        <a href="{% url 'dashboard' %}" class="logo-link">
+            <h1 class="logo">HRMS Lite</h1>
+        </a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+            <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M3 5h14v1.5H3V5Zm0 4.25h14v1.5H3v-1.5Zm0 4.25h14V15H3v-1.5Z"/>
+            </svg>
+        </button>
+        <nav class="nav-links" id="nav-links">
+            <a href="{% url 'dashboard' %}">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M10 2.5 2.5 8v9.5h5v-5h5v5h5V8z"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'employee_list' %}">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M10 10a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 1.5c-3 0-5.5 1-5.5 3v1.5h11V14.5c0-2-2.5-3-5.5-3Z"/>
+                </svg>
+                <span>Employees</span>
+            </a>
+            <a href="{% url 'attendance_overview' %}">
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M6 2.5v2h8v-2h2v2h1.5V18H2.5V4.5H4v-2Zm-1 6V16h10V8.5Z"/>
+                </svg>
+                <span>Attendance</span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <small>HRMS Lite &middot; Simple internal HR tool</small>
+    </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Add employee</h2>
+            <button type="button" class="modal-close" data-modal-close>
+                <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <div id="modal-body">
+            {% block modal_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var backdrop = document.getElementById('modal-backdrop');
+        if (backdrop) {
+            var openButtons = document.querySelectorAll('[data-modal-open]');
+            var closeButtons = backdrop.querySelectorAll('[data-modal-close]');
+
+            function openModal() {
+                backdrop.classList.add('open');
+            }
+
+            function closeModal() {
+                backdrop.classList.remove('open');
+            }
+
+            openButtons.forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    openModal();
+                });
+            });
+
+            closeButtons.forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    closeModal();
+                });
+            });
+
+            backdrop.addEventListener('click', function (e) {
+                if (e.target === backdrop) {
+                    closeModal();
+                }
+            });
+        }
+
+        var menuToggle = document.getElementById('menu-toggle');
+        var navLinks = document.getElementById('nav-links');
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', function () {
+                navLinks.classList.toggle('open');
+            });
+        }
+    })();
+</script>
+</body>
+</html>
+

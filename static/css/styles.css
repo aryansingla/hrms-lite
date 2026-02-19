@@ -1,0 +1,504 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f6fa;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.top-bar {
+    background: #162447;
+    color: #fff;
+    padding: 12px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.logo-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.menu-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    color: #e0e4ff;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #e0e4ff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.page {
+    padding: 24px 0 40px;
+    flex: 1;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-header h2 {
+    margin: 0;
+}
+
+.btn {
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #1f6feb;
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #e4e7f5;
+    color: #111827;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th,
+td {
+    padding: 8px 6px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+th {
+    font-weight: 600;
+    background: #f3f4f6;
+}
+
+tr:hover td {
+    background: #f9fafb;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px 16px;
+}
+
+label {
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 7px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    margin-top: 12px;
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.message {
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.message.success {
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.message.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+}
+
+.pill.present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pill.absent {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 0 18px;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: auto;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.filters-row {
+    margin-bottom: 12px;
+}
+
+/* Desktop: horizontal filter row */
+.filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 8px 12px;
+}
+
+/* Floating label for filter fields */
+.float-label-wrap {
+    position: relative;
+    min-width: 110px;
+}
+
+.float-label-wrap input,
+.float-label-wrap select {
+    width: 100%;
+    min-width: 110px;
+    min-height: 34px;
+    padding: 8px;
+    padding-top: 14px;
+    font-size: 0.85rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.float-label-wrap select {
+    padding-top: 16px;
+    appearance: auto;
+}
+
+.filters-form .btn {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    box-sizing: border-box;
+}
+
+.float-label-wrap label {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    color: #6b7280;
+    transition: transform 0.15s ease, font-size 0.15s ease, color 0.15s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.float-label-wrap input:focus ~ label,
+.float-label-wrap input:not(:placeholder-shown) ~ label,
+.float-label-wrap select:focus ~ label,
+.float-label-wrap select ~ label,
+.float-label-wrap.floated label {
+    top: 2px;
+    transform: translateY(0);
+    font-size: 0.65rem;
+    color: #374151;
+}
+
+.float-label-wrap.floated select,
+.float-label-wrap select:focus {
+    padding-top: 18px;
+}
+
+.float-label-wrap input::placeholder {
+    opacity: 0;
+}
+
+.pagination-wrap {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pagination {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination a {
+    color: #1f6feb;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.filter-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.filter-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+.icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 18px 20px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 18px 0;
+    color: #6b7280;
+}
+
+.empty-state-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.empty-state-text {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px), (max-device-width: 768px) {
+    .top-bar-inner {
+        justify-content: space-between;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-links.open {
+        display: flex;
+        position: fixed;
+        top: 52px;
+        right: 0;
+        background: #0f172a;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 16px;
+        min-width: 200px;
+        box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.35);
+        z-index: 30;
+    }
+
+    .filters-row {
+        display: none;
+    }
+
+    .filter-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Filter popup: one field per row, full width */
+    .modal .filters-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .modal .float-label-wrap {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .modal .filters-form .btn {
+        height: 36px;
+        margin-top: 4px;
+    }
+}
+
+.metric-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.metric-card {
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #ffffff;
+}
+
+.metric-card span {
+    display: block;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.metric-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.metric-employees {
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+}
+
+.metric-attendance {
+    background: linear-gradient(135deg, #16a34a, #4ade80);
+}
+
+.metric-present {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+}
+
