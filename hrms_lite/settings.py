@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-if=vdm()aof2e^tmgg#xn%etwlxoec7m^x5qir$3%-9ue!612p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "*",
+    "aryansingla.pythonanywhere.com",
+    "www.aryansingla.pythonanywhere.com",
+]
 
 
 # Application definition
@@ -77,7 +81,7 @@ WSGI_APPLICATION = 'hrms_lite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -116,7 +120,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
