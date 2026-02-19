@@ -25,11 +25,7 @@ SECRET_KEY = 'django-insecure-if=vdm()aof2e^tmgg#xn%etwlxoec7m^x5qir$3%-9ue!612p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "*",
-    "aryansingla.pythonanywhere.com",
-    "www.aryansingla.pythonanywhere.com",
-]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -46,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

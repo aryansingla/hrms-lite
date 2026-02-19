@@ -38,6 +38,19 @@ Open **http://127.0.0.1:8000/**. Dashboard is at `/`, employees at `/employees/`
 
 ---
 
+## Deploy on Railway
+
+1. Push this repo to GitHub (e.g. `hrms-lite`).
+2. Go to [railway.app](https://railway.app), sign in (e.g. with GitHub).
+3. **New project** → **Deploy from GitHub repo** → choose `hrms-lite`.
+4. Railway will detect the `Procfile` and use it. No extra build/start commands needed unless you change the Procfile.
+5. In the service → **Settings** → **Networking** → **Generate domain** to get a public URL (e.g. `https://hrms-lite-production-xxxx.up.railway.app`).
+6. Optional: set **Environment variables** (e.g. `DEBUG=False`, `SECRET_KEY=your-secret-key`) for production.
+
+The app runs migrations and `collectstatic` on each deploy, then starts Gunicorn. Static files are served via WhiteNoise.
+
+---
+
 ## Assumptions / limitations
 
 - **No auth.** One implicit admin; no user accounts or roles.
