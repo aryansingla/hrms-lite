@@ -16,8 +16,9 @@ A small internal HR tool for managing employees and daily attendance. Add/delete
 ## Run locally
 
 ```bash
-# clone or cd into the project
-cd hrms-lite-project
+# clone (creates hrms-lite folder)
+git clone https://github.com/aryansingla/hrms-lite.git
+cd hrms-lite
 
 # optional: use a venv
 python -m venv venv
