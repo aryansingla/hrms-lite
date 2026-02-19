@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,15 @@ SECRET_KEY = 'django-insecure-if=vdm()aof2e^tmgg#xn%etwlxoec7m^x5qir$3%-9ue!612p
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+# Required for CSRF when the app is behind a different origin (e.g. Railway).
+# Add more origins via env CSRF_TRUSTED_ORIGINS (comma-separated) if you use another domain.
+CSRF_TRUSTED_ORIGINS = [
+    "https://hrms-lite-aryansingla.up.railway.app",
+]
+_extra = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
+if _extra:
+    CSRF_TRUSTED_ORIGINS += [s.strip() for s in _extra.split(",") if s.strip()]
 
 
 # Application definition
