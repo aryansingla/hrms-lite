@@ -84,12 +84,13 @@ WSGI_APPLICATION = 'hrms_lite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-# When DATABASE_URL is set (e.g. Railway with MySQL), use it. Otherwise SQLite for local.
+# Railway MySQL exposes MYSQL_URL. Use that or DATABASE_URL when set; otherwise SQLite for local.
 
-if os.environ.get("DATABASE_URL"):
-    import dj_database_url
+_db_url = os.environ.get("DATABASE_URL") or os.environ.get("MYSQL_URL")
+if _db_url:
+    import dj_database_url  # type: ignore
     DATABASES = {
-        "default": dj_database_url.config(conn_max_age=600, conn_health_checks=True),
+        "default": dj_database_url.parse(_db_url, conn_max_age=600),
     }
 else:
     DATABASES = {
